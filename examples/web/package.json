@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "next": "12.2.5",
-    "react-image-error-handling": "*",
+    "react-image-hooks": "*",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
