@@ -1,0 +1,11 @@
+{
+  "name": "prettierrc",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "prettier": "^2.7.1"
+  },
+  "files": [
+    ".prettierrc"
+  ]
+}

@@ -1,9 +1,9 @@
 {
-  "name": "ui",
+  "name": "react-image-hooks",
   "version": "0.0.0",
-  "main": "./index.tsx",
-  "types": "./index.tsx",
   "license": "MIT",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "scripts": {
     "lint": "eslint *.ts*"
   },
@@ -12,8 +12,10 @@
     "@types/react-dom": "^17.0.11",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
-    "react": "^18.2.0",
     "tsconfig": "*",
     "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
   }
 }
