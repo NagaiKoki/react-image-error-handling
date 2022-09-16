@@ -9,8 +9,6 @@ export default function Web() {
     imageUrl: errorImageUrl,
   });
 
-  console.log(load);
-
   return (
     <div>
       <h1>Web</h1>
