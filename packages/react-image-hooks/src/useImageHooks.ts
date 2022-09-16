@@ -36,15 +36,7 @@ export const useImageHooks = ({
     setErrorCount(errorCount + 1);
   }, [errorCount]);
 
-  // const handleOnRetry = useCallback(() => {
-  //   if (imageRef.current) {
-  //     if (errorCount < maxRetryCount) {
-  //       imageRef.current.src = imageUrl;
-  //     }
-  //   }
-  // }, [errorCount, maxRetryCount, imageUrl]);
-
-  useEffect(() => {
+  const handleOnRetry = useCallback(() => {
     if (imageRef.current) {
       if (errorCount < maxRetryCount) {
         imageRef.current.src = imageUrl;
@@ -52,6 +44,10 @@ export const useImageHooks = ({
         imageRef.current.src = errorStateImageUrl;
       }
     }
+  }, [errorCount, maxRetryCount, imageUrl, errorStateImageUrl]);
+
+  useEffect(() => {
+    handleOnRetry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorCount]);
 
