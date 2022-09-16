@@ -57,6 +57,6 @@ export const useImageHooks = ({
     onLoad: handleOnLoad,
     onError: isOverRetryCount
       ? undefined
-      : () => debounce({ func: handleOnError, ms: retryInterval }),
+      : () => debounce({ func: handleOnError, delayTime: retryInterval }),
   };
 };
