@@ -1,62 +1,53 @@
-import { useState, useCallback, useEffect, useRef, RefObject } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { debounce } from "./utils";
 
 type ArgsType = {
-  imageUrl: string;
-  errorStateImageUrl?: string;
-  maxRetryCount?: number;
-  retryInterval?: number;
+  url: string;
+  placeholderUrl?: string;
+  maxErrorRetryCount?: number;
+  errorRetryInterval?: number;
 };
 
-type ReturnType = {
-  ref: RefObject<HTMLImageElement>;
-  load: boolean;
-  onLoad: () => void;
-  onError: (() => void) | undefined;
-};
+type ImageStatus = "loading" | "loaded" | "error";
 
 export const useImageHooks = ({
-  imageUrl,
-  errorStateImageUrl,
-  maxRetryCount = 5,
-  retryInterval = 1000,
-}: ArgsType): ReturnType => {
-  const [errorCount, setErrorCount] = useState(0);
-  const [load, setLoad] = useState(false);
-  const imageRef = useRef<HTMLImageElement>(null);
+  url,
+  placeholderUrl,
+  maxErrorRetryCount = 5,
+  errorRetryInterval = 1000,
+}: ArgsType) => {
+  const [src, setSrc] = useState(placeholderUrl);
+  const [status, setStatus] = useState<ImageStatus>("loading");
+  const mountRef = useRef(false);
+  let errorCount = 0;
 
-  const isOverRetryCount = errorCount > maxRetryCount;
+  const loadImage = useCallback(() => {
+    const image = new Image();
+    image.src = url;
 
-  const handleOnLoad = useCallback(() => {
-    setLoad(true);
+    image.onload = () => {
+      setStatus("loaded");
+      setSrc(url);
+    };
+
+    image.onerror = () => {
+      if (errorCount < maxErrorRetryCount) {
+        ++errorCount;
+        return debounce({ func: loadImage, delayTime: errorRetryInterval });
+      }
+    };
+  }, [errorCount]);
+
+  useLayoutEffect(() => {
+    if (!mountRef.current) {
+      mountRef.current = true;
+      loadImage();
+    }
   }, []);
 
-  const handleOnError = useCallback(() => {
-    setErrorCount(errorCount + 1);
-  }, [errorCount]);
-
-  const handleOnRetry = useCallback(() => {
-    if (imageRef.current) {
-      if (errorCount < maxRetryCount) {
-        imageRef.current.src = imageUrl;
-      } else if (errorCount === maxRetryCount && !!errorStateImageUrl) {
-        imageRef.current.src = errorStateImageUrl;
-      }
-    }
-  }, [errorCount, maxRetryCount, imageUrl, errorStateImageUrl]);
-
-  useEffect(() => {
-    handleOnRetry();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [errorCount]);
-
   return {
-    ref: imageRef,
-    load,
-    onLoad: handleOnLoad,
-    onError: isOverRetryCount
-      ? undefined
-      : () => debounce({ func: handleOnError, delayTime: retryInterval }),
+    src,
+    status,
   };
 };

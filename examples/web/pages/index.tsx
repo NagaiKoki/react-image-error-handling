@@ -1,26 +1,24 @@
 import { useImageHooks } from "react-image-hooks";
 
+import SampleImage from "../images/sampleImage.jpg";
+
 const errorImageUrl =
   "https://error.avatars.githubusercontent.com/u/50698194?v=4";
-const myGithubUrl = "https://avatars.githubusercontent.com/u/50698194?v=4";
+const myGithubUrl = "./sampleImadge.jpg";
 
 export default function Web() {
-  const { ref, load, onLoad, onError } = useImageHooks({
-    imageUrl: errorImageUrl,
+  const { src } = useImageHooks({
+    url: "/samplesImage.jpg",
   });
 
   return (
     <div>
-      <h1>Web</h1>
-      <div style={{ width: 400, height: 400 }}>
+      <div style={{ width: 2000, height: 2000 }}>
         <img
-          ref={ref}
-          src={myGithubUrl}
+          src={src}
           width={400}
           height={400}
           alt="react-error-handling-image"
-          onLoad={onLoad}
-          onError={onError}
         />
       </div>
     </div>
